@@ -16,6 +16,7 @@ import se.ifmo.lab8.localization.Localization;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+//выполняет регистрацию
 @Component
 @RequiredArgsConstructor
 public class RegisterController {
@@ -23,6 +24,7 @@ public class RegisterController {
     private final StageHandler stageHandler;
     private final Localization localization;
 
+//используются для связывания элементов пользовательского интерфейса из FXML файла с полями
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -53,8 +55,9 @@ public class RegisterController {
     void backToLogin(ActionEvent event) {
         stageHandler.showLoginScene();
     }
-
+//вызывается при нажатии назад
     @FXML
+    //при нажатии зарегистрироваться, забирает данные + проверяет их на повтор, длину, существование
     void handleRegister(ActionEvent event) {
         String username = this.login.getText();
         String password = this.password.getText();
@@ -88,6 +91,7 @@ public class RegisterController {
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
+    //проверяет поля, выводит ошибку
     void initialize() {
         assert authorize1 != null : "fx:id=\"authorize1\" was not injected: check your FXML file 'register.fxml'.";
         assert error_text != null : "fx:id=\"error_text\" was not injected: check your FXML file 'register.fxml'.";

@@ -140,7 +140,9 @@ public class WorkspaceController {
             Platform.runLater(this::updateTable);
     }
 
-    private void updateTable() {
+    private void updateTable()
+    //обновление таблицы
+    {
         status.setText(RuntimeConfiguration.getUsername());
 
         TableColumn<Organization, ?> sortColumn = mainTable.getSortOrder().isEmpty() ? null : mainTable.getSortOrder().get(0);
@@ -181,7 +183,9 @@ public class WorkspaceController {
         drawBands();
     }
 
-    private void initializeTableColumns() {
+    private void initializeTableColumns()
+    //определяет столбцы таблицы с соотв именами и настраивает фабрики значений ячеек для отображения отформатированных данных из объекта организации
+    {
         TableColumn<Organization, String> nameCol = new TableColumn<>(localization.get("col.name"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -214,7 +218,9 @@ public class WorkspaceController {
         mainTable.getColumns().addAll(nameCol, annualTurnoverCol, coordinatesCol, creationDateCol, organizationStringTableColumn, officialAddress);
     }
 
-    private void drawBands() {
+    private void drawBands()
+    //перебирает список организация и вызывает drqwBand
+    {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (Organization organization : organizations) {
@@ -222,7 +228,9 @@ public class WorkspaceController {
         }
     }
 
-    private void drawBand(GraphicsContext gc, Organization band) {
+    private void drawBand
+            //графическая визуализация
+            (GraphicsContext gc, Organization band) {
         double size = band.getAnnualTurnover();
         double x = Math.max(0, Math.min(band.getCoordinates().getX(), canvas.getHeight() - size));
         double y = Math.max(0, Math.min(band.getCoordinates().getY(), canvas.getWidth() - size));
@@ -242,12 +250,16 @@ public class WorkspaceController {
         alreadyDrawn.add(band.getId());
     }
 
-    private Color getColorForUser(boolean isEditable) {
+    private Color getColorForUser
+            //зеленый цвет - редактируемые, синий - нередактируемые
+            (boolean isEditable) {
         return isEditable ? Color.GREEN : Color.BLUE;
     }
 
     @FXML
-    private void canvasClicked(MouseEvent event) {
+    private void canvasClicked
+            //обработка щелчков
+            (MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
 
@@ -269,11 +281,15 @@ public class WorkspaceController {
     }
 
     @FXML
-    void add(ActionEvent event) {
+    void add
+            //при нажатии кнопки добавить
+            (ActionEvent event) {
         showPopup(false);
     }
 
-    private TextField getField(String prompt) {
+    private TextField getField
+            //создает новый обьект
+            (String prompt) {
         TextField textField = new TextField();
         textField.setPromptText(prompt);
         return textField;
@@ -286,7 +302,9 @@ public class WorkspaceController {
         return textField;
     }
 
-    private void showPopup(boolean isEdit) {
+    private void showPopup
+            //всплывающее окно
+            (boolean isEdit) {
         Organization selected = isEdit ? mainTable.getSelectionModel().getSelectedItem() : null;
 
         Stage popup = new Stage();
@@ -464,6 +482,7 @@ public class WorkspaceController {
         popup.showAndWait();
     }
 
+    //Обрабатывает исключение ValidationException, возникающее при нарушении валидации данных.
     private void handleValidationException(se.ifmo.lab8.database.model.ValidationException ex) {
         StringBuilder errorMsg = new StringBuilder(localization.get("error.validation.failed") + ":\n");
         ex.getConstraintViolations().forEach(violation -> {
@@ -472,6 +491,7 @@ public class WorkspaceController {
         showAlert(Alert.AlertType.ERROR, errorMsg.toString());
     }
 
+    //отображения окна с информацией об организации
     private void showInfoPopup(Organization organization) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -505,26 +525,34 @@ public class WorkspaceController {
 
     @SneakyThrows
     @FXML
-    void logout(ActionEvent event) {
+    void logout(ActionEvent event)
+    //обработка выхода из системы
+    {
         RuntimeConfiguration.setUser(Optional.empty());
         stageHandler.showLoginScene();
     }
 
     @FXML
-    void removeAll(ActionEvent event) {
+    void removeAll
+            //удалить всё
+            (ActionEvent event) {
         organizationService.removeAllByUser(RuntimeConfiguration.getUser().orElseThrow());
         updateTable();
     }
 
     @FXML
-    void removeSelected(ActionEvent event) {
+    void removeSelected(ActionEvent event)
+    //удалить выбранное
+    {
         Organization selected = mainTable.getSelectionModel().getSelectedItem();
         organizationService.removeByIdAndUser(selected.getId(), RuntimeConfiguration.getUser().orElseThrow());
         updateTable();
     }
 
     @FXML
-    void setViewOnlyRedactable(ActionEvent event) {
+    void setViewOnlyRedactable
+            //показать только редактируемое
+            (ActionEvent event) {
         if (show_onlyredactable.isSelected()) {
             organizations.clear();
             organizations.addAll(organizationService.findAll());
@@ -535,12 +563,16 @@ public class WorkspaceController {
     }
 
     @FXML
-    void showInfo(ActionEvent event) {
+    void showInfo
+            //информация кнопка
+            (ActionEvent event) {
         showAlert(Alert.AlertType.INFORMATION, localization.get("information.content"));
     }
 
     @FXML
-    void removeGreater(ActionEvent event) {
+    void removeGreater(ActionEvent event)
+    //удалить с наибольшим оборотом
+    {
         try {
             organizationService.removeByIdAndUser(organizationService.findAllByUser(RuntimeConfiguration.getUser().orElseThrow()).stream()
                     .max(Comparator.comparing(Organization::getAnnualTurnover)).map(Organization::getId).orElse(null), RuntimeConfiguration.getUser().orElseThrow());
@@ -551,6 +583,7 @@ public class WorkspaceController {
     }
 
     @FXML
+    //с наименьшим оборотом удалить
     void removeLower(ActionEvent event) {
         try {
             organizationService.removeByIdAndUser(organizationService.findAllByUser(RuntimeConfiguration.getUser().orElseThrow()).stream()
@@ -561,7 +594,9 @@ public class WorkspaceController {
         }
     }
 
-    public void printUniqueAnnualTurnoverAction(ActionEvent actionEvent) {
+    public void printUniqueAnnualTurnoverAction
+            //показать уникальные обороты
+            (ActionEvent actionEvent) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
 
@@ -582,7 +617,9 @@ public class WorkspaceController {
         popup.show();
     }
 
-    public void filterGreaterThanTypeAction(ActionEvent actionEvent) {
+    public void filterGreaterThanTypeAction
+            //фильтр по типу
+            (ActionEvent actionEvent) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
 
@@ -615,7 +652,7 @@ public class WorkspaceController {
     }
 
     public void minByNameAction(ActionEvent actionEvent) {
-
+//показывает элементы с меньшим именем
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
 

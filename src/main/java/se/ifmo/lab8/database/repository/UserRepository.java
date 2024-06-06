@@ -6,6 +6,7 @@ import se.ifmo.lab8.database.model.User;
 
 import java.util.Optional;
 
+//репозиторий для работы с сущностью пользователя. Поиск по имени пользователя и паролю + проверки существования пользователя по имени
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameAndPassword(String username, String password);

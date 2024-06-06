@@ -17,17 +17,23 @@ import se.ifmo.lab8.gui.loader.SpringFXMLLoader;
 @Component @Scope("singleton")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Log4j2
-public class StageHandler {
+public class StageHandler
+//класс отвечает за отображение окон приложения
+{
     @NonFinal @Setter
+            //Переменная, которая будет хранить ссылку на главное окно приложения (Stage). Она помечена как NonFinal для возможности установки значения в конструкторе и Setter для возможности изменения значения с помощью сеттера
     Stage primaryStage;
     ApplicationContext applicationContext;
 
     public StageHandler(ApplicationContext applicationContext) {
         showLoginScene();
+        //отображения сцены входа в систему при создании объекта
         this.applicationContext = applicationContext;
     }
 
-    public void showRegisterScene() {
+    public void showRegisterScene()
+    //отображение окна регистрации
+    {
         try {
             SpringFXMLLoader fxmlLoader = new SpringFXMLLoader(applicationContext);
             FXMLLoader loader = fxmlLoader.getLoader(("/register.fxml"));
@@ -40,7 +46,9 @@ public class StageHandler {
         }
     }
 
-    public void showLoginScene() {
+    public void showLoginScene()
+    //отображение окно логина
+    {
         try {
             SpringFXMLLoader fxmlLoader = new SpringFXMLLoader(applicationContext);
             FXMLLoader loader = fxmlLoader.getLoader("/login_v1.fxml");
@@ -53,7 +61,9 @@ public class StageHandler {
         }
     }
 
-    public void showWorkspaceScene() {
+    public void showWorkspaceScene()
+    //отображение окна рабочего окна
+    {
         try {
             SpringFXMLLoader fxmlLoader = new SpringFXMLLoader(applicationContext);
             FXMLLoader loader = fxmlLoader.getLoader(("/workspace.fxml"));

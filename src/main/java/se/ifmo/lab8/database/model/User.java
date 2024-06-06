@@ -20,16 +20,19 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //при создании нового пользователя ид генерируется автоматически
     Long id;
 
     @NotNull(message = "error.user.username.null")
     @NotBlank(message = "error.user.username.blank")
     @Column(unique = true)
+    //уникальные значения в БД
     String username;
 
     @NotNull(message = "error.user.password.null")
     @NotBlank(message = "error.user.password.blank")
     @ToString.Exclude
+    //исключено из метода вывода в целях безопасности
     String password;
 
     @Override
