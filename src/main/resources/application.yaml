@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: 'lab8'
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lab8
+    username: postgres
+    password: HackMe228
+  jmx:
+    enabled: true
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  main:
+    banner-mode: off
+
+encoder:
+  secret: superServerSecret
+  iterations: 20
+  hashWidth: 256
+
+logging:
+  level:
+    org:
+      hibernate: WARN
